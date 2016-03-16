@@ -1,0 +1,66 @@
+<div class="jumbotron">
+  <h1>Add customers to MongoDB</h1>
+
+  <p>
+    This page is designed to be a graphical API to add customer-objects to a MongoDB.
+  </p>
+
+</div>
+
+<div class="container" ng-controller="CustomerStorageCtrl">
+
+  <div class="alert alert-info">
+    <p>Sort Type: {{ sortType }}</p>
+    <p>Sort Reverse: {{ sortReverse }}</p>
+    <p>Search Query: {{ searchFish }}</p>
+  </div>
+
+  <form>
+    <div class="input-group">
+      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+      <input type="text" class="form-control" placeholder="Search da fish" ng-model="searchFish">
+
+    </div>
+  </form>
+
+  <table class="table table-bordered table-striped">
+
+    <thead>
+      <tr>
+        <td>
+          <a href="" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+            Sushi Roll
+            <span ng-show="sortType == 'name'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="sortType = 'fish'; sortReverse = !sortReverse">
+            Fish Type
+            <span ng-show="sortType == 'fish'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+          </a>
+        </td>
+        <td>
+          <a href="" ng-click="sortType = 'tastiness'; sortReverse = !sortReverse">
+            Taste Level
+            <span ng-show="sortType == 'tastiness'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down'"></span>
+          </a>
+        </td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="roll in sushi | orderBy:sortType:sortReverse | filter:searchFish">
+        <td>{{ roll.name }}</td>
+        <td>{{ roll.fish }}</td>
+        <td>{{ roll.tastiness }}</td>
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div ng-show="(sushi | filter:searchFish).length == 0" class="alert alert-info">
+    Oops! Your search did not return any results!
+  </div>
+
+</div>
