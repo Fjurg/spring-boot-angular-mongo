@@ -5,49 +5,47 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class CustomerAPI {
+
+    // TODO: Add endpoints for "add" and "delete" customers from db.
 
     private static final Logger log = LoggerFactory.getLogger(CustomerAPI.class);
 
     @Autowired
     CustomerRepository customerRepository;
 
-
-
-    /*
-    // Does not post. How do I post?
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Customer addCustomer(@RequestBody Customer customer) {
-        return null;
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public void remove() {
-        repository.deleteAll();
-    }
+    /**
+     * @param firstName First Name
+     * @param lastName Last Name
+     * @return a specific customer
+     */
 
     @RequestMapping(value = "/{firstName}/{lastName}", method = RequestMethod.GET)
     public Customer getSpecificCustomer(@PathVariable String firstName, @PathVariable String lastName) {
-        for (Customer customer : repository.findAll()) {
-            if (customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName)) {
-                return customer;
-            }
-        }
-        return null;
+        return customerRepository.findAll()
+                .stream()
+                .filter(customer -> customer.getFirstName().equalsIgnoreCase(firstName)
+                        && customer.getLastName().equalsIgnoreCase(lastName))
+                .findAny()
+                .get();
     }
-    */
+
+    /**
+     * @returns a list of all customers stored in db
+     */
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Customer listAll() {
-        populateRepo();
-        for (Customer customer : customerRepository.findAll()) {
-            log.info(customer.toString());
-        }
-        return null;
+    public List<Customer> listAll() {
+        return customerRepository.findAll();
     }
 
+    /**
+     * Use to create testdata for mongo
+     *
     public void populateRepo() {
         // Start clean
         customerRepository.deleteAll();
@@ -60,4 +58,5 @@ public class CustomerAPI {
         customerRepository.save(new Customer("Jonas", "Lindberg"));
         customerRepository.save(new Customer("Anders", "Hellström"));
     }
+     **/
 }
